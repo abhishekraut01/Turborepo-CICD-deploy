@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "es2016",                                
+    "strict": true,                                      
+    "skipLibCheck": true   ,
+    "moduleResolution": "node16", // or "nodenext"
+    "baseUrl": ".", // if not already set
+    "paths": {
+      "@repo/db": ["../../packages/db/src"]
+    }                         
+  }
+}
