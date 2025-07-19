@@ -1,0 +1,29 @@
+{
+  "name": "websockets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": " tsc  && node dist/index.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "check-types": "tsc --noEmit",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@repo/db": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@types/ws": "^8.18.1",
+    "dotenv": "^16.4.7",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.8.3"
+  }
+}

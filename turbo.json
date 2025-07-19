@@ -8,6 +8,14 @@
       "outputs": [".next/**", "!.next/cache/**"],
       "env": ["DATABASE_URL"]
     },
+    "start": {
+      "dependsOn": ["^build", "^db:generate"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["DATABASE_URL"],
+      "cache": true,
+      "persistent": true
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },
@@ -29,5 +37,6 @@
     "db:deploy": {
       "cache": false
     }
+   
   }
 }
