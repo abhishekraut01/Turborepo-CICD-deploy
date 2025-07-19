@@ -24,6 +24,7 @@ app.post("/users", async (req, res) => {
       // Unique constraint failed
       return res.status(409).json({ error: "Email already exists" });
     }
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

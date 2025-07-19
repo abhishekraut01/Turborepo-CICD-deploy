@@ -1,12 +1,9 @@
 {
   "extends": "@repo/typescript-config/backend.json",
-  "include": ["src"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
-    "rootDir": "./src",
     "outDir": "./dist",
-    "paths": {
-      "@repo/db": ["../../packages/db/src"]
-    }
+    "baseUrl": "."
   }
 }
