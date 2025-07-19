@@ -5,5 +5,17 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "exports": {
+    "./base.json": "./base.json",
+    "./backend.json": "./backend.json",
+    "./nextjs.json": "./nextjs.json",
+    "./react-library.json": "./react-library.json"
+  },
+  "files": [
+    "base.json",
+    "backend.json",
+    "nextjs.json",
+    "react-library.json"
+  ]
 }
