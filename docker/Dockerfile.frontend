@@ -18,7 +18,7 @@ COPY ./turbo.json ./turbo.json
 # Install dependencies
 RUN pnpm install
 
-RUN npm run build
+RUN pnpm run build
 
 EXPOSE 3000
 

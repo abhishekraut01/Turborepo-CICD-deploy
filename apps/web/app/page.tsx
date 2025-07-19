@@ -5,9 +5,13 @@ export default async function Home() {
   return (
     
     <div>
+      <h1>User {`=>`}  </h1>
       {user.map((user) => (
         <div key={user.id}>{user.name}</div>
       ))}
     </div>
   );
 }
+
+
+export const dynamic = 'force-dynamic'
