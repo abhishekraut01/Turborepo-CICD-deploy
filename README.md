@@ -1,135 +1,197 @@
-# Turborepo starter
+# Docker Setup Guide
 
-This Turborepo starter is maintained by the Turborepo core team.
+This monorepo contains Docker configurations for the following services:
+- **Backend** (Express.js API on port 3001)
+- **Frontend** (Next.js web application on port 3000)
+- **WebSockets** (WebSocket server on port 9000)
+- **Database** (PostgreSQL on port 5432)
 
-## Using this example
+## Prerequisites
 
-Run the following command:
+- Docker and Docker Compose installed
+- At least 4GB of available RAM
+- 10GB of free disk space
 
-```sh
-npx create-turbo@latest
+## Quick Start
+
+1. **Clone and navigate to the repository**:
+   ```bash
+   cd Deploy-monorepo
+   ```
+
+2. **Create environment file** (optional):
+   ```bash
+   cp .env.example .env
+   # Edit .env file as needed
+   ```
+
+3. **Build and start all services**:
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the applications**:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+   - WebSocket: ws://localhost:9000
+   - Database: localhost:5432
+
+## Individual Service Commands
+
+### Build individual services:
+```bash
+# Backend only
+docker build -f docker/Dockerfile.backend -t backend:latest .
+
+# Frontend only
+docker build -f docker/Dockerfile.frontend -t frontend:latest .
+
+# WebSockets only
+docker build -f docker/Dockerfile.websockets -t websockets:latest .
 ```
 
-## What's inside?
+### Run individual services:
+```bash
+# Backend
+docker run -p 3001:3001 backend:latest
 
-This Turborepo includes the following packages/apps:
+# Frontend
+docker run -p 3000:3000 frontend:latest
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+# WebSockets
+docker run -p 9000:9000 websockets:latest
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Docker Compose Commands
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+```bash
+# Build all services
+docker-compose build
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+# Start services (detached)
+docker-compose up -d
 
-### Develop
+# Stop services
+docker-compose down
 
-To develop all apps and packages, run the following command:
+# View logs
+docker-compose logs
 
-```
-cd my-turborepo
+# Rebuild and restart specific service
+docker-compose up --build backend
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Scale a service
+docker-compose up --scale backend=3
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Development vs Production
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+### Development:
+- Uses `--no-frozen-lockfile` for package installation
+- Includes development dependencies
+- Optimized for fast rebuilds
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+### Production:
+- Uses optimized Node.js Alpine images
+- Runs as non-root user
+- Multi-stage builds for smaller images
+- Health checks and proper signal handling
 
-### Remote Caching
+## Environment Variables
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+Create a `.env` file in the root directory:
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+```bash
+# Database
+DATABASE_URL=postgresql://postgres:password@db:5432/monorepo_db
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+# Node Environment
+NODE_ENV=production
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# Optional: Custom ports
+BACKEND_PORT=3001
+FRONTEND_PORT=3000
+WEBSOCKET_PORT=9000
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## Troubleshooting
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### Common Issues:
+
+1. **Port conflicts**: Ensure ports 3000, 3001, 9000, and 5432 are available
+2. **Memory issues**: Increase Docker's memory limit to at least 4GB
+3. **Build failures**: Clean Docker cache with `docker system prune -a`
+4. **Permission issues**: Ensure Docker has proper file system access
+
+### Clean Start:
+```bash
+# Stop all containers
+docker-compose down -v
+
+# Remove all images
+docker-compose down --rmi all
+
+# Clean system
+docker system prune -a
+
+# Rebuild everything
+docker-compose up --build
+```
+
+### Logs and Debugging:
+```bash
+# View logs for all services
+docker-compose logs -f
+
+# View logs for specific service
+docker-compose logs -f backend
+
+# Execute shell in running container
+docker-compose exec backend sh
+```
+
+## Architecture Overview
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Frontend  │────│   Backend   │────│  WebSockets │
+│  (Next.js)  │    │ (Express.js)│    │   (Node.js) │
+│   Port 3000 │    │  Port 3001  │    │  Port 9000  │
+└─────────────┘    └─────────────┘    └─────────────┘
+       │                   │                   │
+       └───────────────────┼───────────────────┘
+                           │
+                  ┌─────────────┐
+                  │ PostgreSQL  │
+                  │  Port 5432  │
+                  └─────────────┘
 ```
 
-## Useful Links
+## File Structure
 
-Learn more about the power of Turborepo:
+```
+├── docker/
+│   ├── Dockerfile.backend      # Backend service
+│   ├── Dockerfile.frontend     # Frontend service
+│   └── Dockerfile.websockets   # WebSocket service
+├── docker-compose.yml          # Multi-service orchestration
+├── .dockerignore               # Files to exclude from build
+├── .env.example                # Environment variables template
+└── README.docker.md            # This file
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## Security Considerations
+
+- All services run as non-root users
+- Sensitive data managed through environment variables
+- Network isolation through Docker networks
+- Volume permissions properly configured
+- No secrets embedded in images
+
+## Performance Tips
+
+- Use Docker BuildKit for faster builds
+- Leverage multi-stage builds
+- Cache dependencies effectively
+- Use .dockerignore to exclude unnecessary files
+- Consider using distroless images for production
