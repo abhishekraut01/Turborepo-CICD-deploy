@@ -34,4 +34,4 @@ USER nodejs
 
 EXPOSE 3001
 
-CMD ["pnpm", "run", "start", "--filter=backend"]
+CMD ["pnpm", "run", "start"]
